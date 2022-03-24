@@ -1,5 +1,5 @@
 import removeIcon from './img/remove-icon.png'
-import React, { useState } from 'react'
+import React from 'react'
 
 
 function Task({task, onTaskDelete, onTaskClick}) {
@@ -9,7 +9,7 @@ function Task({task, onTaskDelete, onTaskClick}) {
       <label className="form-element_label">
       <input onClick={(event) => {
         event.stopPropagation();
-        onTaskClick(task.id, event)
+        onTaskClick(task.id)
       }} type="checkbox" className="checkbox"/>
       <span className="checkbox-text">{task.text}</span>
       </label>
