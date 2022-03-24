@@ -10,7 +10,6 @@ function TaskForm({placeholder = 'Добавить дел', onFormSubmit, priori
     setTask({
       text: e.target.value.trim(),
       priority,
-      checked: false,
     })
   }
 

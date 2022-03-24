@@ -27,6 +27,7 @@ function reducer(state = initialState, action) {
           if (task.id === action.id) {
             return Object.assign({}, task, {checked: !task.checked})
           }
+          return task
         })
       })
     default:

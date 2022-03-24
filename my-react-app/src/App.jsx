@@ -1,9 +1,14 @@
-import React, { useState } from 'react'
+import React from 'react'
+import store from './store/store';
 import Todo from './Todo';
+import { Provider } from 'react-redux';
+
 
 function App() {
   return (
-    <Todo/>
+    <Provider store={store}>
+      <Todo/>
+    </Provider>
   );
 }
 

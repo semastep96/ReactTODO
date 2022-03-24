@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
-import helpers from './helpers';
+import React from 'react'
 import './style.css'
 import TaskForm from './taskForm'
 import Task from './Task'
+import { useDispatch, useSelector } from 'react-redux';
+import { addTask, deleteTask, toggleChange } from './store/actions';
 
 function Todo() {
   const PRIORITY = {
@@ -10,41 +11,31 @@ function Todo() {
     HIGHT: 'HIGHT'
   }
 
-  const [tasks, setTasks] = useState([])
+  const { tasks } = useSelector(state => state)
+  const dispatch = useDispatch()
 
-  const lowTasks = tasks.filter(task => task.priority === PRIORITY.LOW).map(task => <Task key={task.id.toString()} task={task} onTaskDelete={onTaskDelete} onTaskClick={onTaskClick} />)
-  const hightTasks = tasks.filter(task => task.priority === PRIORITY.HIGHT).map(task => <Task key={task.id.toString()} task={task} onTaskDelete={onTaskDelete} onTaskClick={onTaskClick} />)
+  const lowTasks = [...filterTasks(PRIORITY.LOW, false), ...filterTasks(PRIORITY.LOW, true)]
 
+  const hightTasks = [...filterTasks(PRIORITY.HIGHT, false), ...filterTasks(PRIORITY.HIGHT, true)]
 
-  function onFormSubmit(task) {
-    task.id = helpers.getNextId(tasks)
-    setTasks([...tasks, task])
+  function filterTasks(priority, checked) {
+    return tasks.filter(task => task.priority === priority && task.checked === checked).map(task => <Task 
+    key={task.id.toString()} 
+    task={task} 
+    onTaskDelete={onTaskDelete} 
+    onTaskClick={onTaskClick} />)
+  }
+
+  function onFormSubmit({ text, priority }) {
+    dispatch(addTask(text, priority))
   }
 
   function onTaskDelete(id) {
-    const tasksAfterDelete = tasks.filter(task => task.id !== id)
-    setTasks(tasksAfterDelete)
+    dispatch(deleteTask(id))
   }
 
   function onTaskClick(id) {
-    function checkedTaskToBottom() {
-      const tempArr = []
-      const _tasks = tasks.map(task => {
-        if (task.id === id) {
-          task.checked = !task.checked
-          if (task.checked === true) {
-            tempArr.push(task)
-          }
-        }
-        return task
-      }).filter(task => task.id != id || task.checked === false)
-
-      return [..._tasks, ...tempArr]
-    }
-
-    const newTasks = checkedTaskToBottom()
-
-    setTasks(newTasks)
+    dispatch(toggleChange(id))
   }
 
   return (
